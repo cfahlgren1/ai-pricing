@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "next-themes";
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
+
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -8,8 +10,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AI Token Pricing",
-  description: "AI Token Pricing",
+  title: "inference.directory",
+  description: "The fastest way to find the best AI inference models and pricing.",
 };
 
 export default function RootLayout({
@@ -23,17 +25,19 @@ export default function RootLayout({
       "whitespace-pre-line antialiased",
     )}>
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+        <NuqsAdapter>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
         >
           <nav className="container mx-auto py-4 flex justify-end items-center">
             <ThemeToggle />
           </nav>
           {children}
         </ThemeProvider>
+        </NuqsAdapter>
       </body>
     </html>
   );
