@@ -1,17 +1,21 @@
 "use client"
 
-import { useState } from "react";
 import SearchInput from "@/components/search-input";
 import ProviderTabs from "@/components/provider-tabs";
 import type { Provider } from "@/components/provider-tabs";
+import { useQueryState } from "nuqs";
 
 interface SearchProvidersProps {
   providers: Provider[];
 }
 
 export default function SearchProviders({ providers }: SearchProvidersProps) {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useQueryState("q");
   
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value || null);
+  };
+
   const filteredProviders = searchQuery
     ? providers.filter(provider => 
         provider.name.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -22,7 +26,8 @@ export default function SearchProviders({ providers }: SearchProvidersProps) {
       <div className="w-full max-w-md mx-auto px-2 sm:px-0">
         <SearchInput 
           placeholder="Search for your favorite models or providers..." 
-          onChange={setSearchQuery}
+          onChange={handleSearchChange}
+          value={searchQuery || ""}
         />
       </div>
       

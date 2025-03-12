@@ -2,28 +2,29 @@
 
 import type React from "react"
 
-import { useState } from "react"
 import { Search, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface SearchInputProps {
   placeholder?: string
   className?: string
+  value: string
   onChange?: (value: string) => void
   onSubmit?: (value: string) => void
 }
 
-export default function SearchInput({ placeholder = "Search...", className, onChange, onSubmit }: SearchInputProps) {
-  const [value, setValue] = useState("")
-
+export default function SearchInput({ 
+  placeholder = "Search...", 
+  className, 
+  value = "",
+  onChange, 
+  onSubmit 
+}: SearchInputProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value
-    setValue(newValue)
-    onChange?.(newValue)
+    onChange?.(e.target.value)
   }
 
   const handleClear = () => {
-    setValue("")
     onChange?.("")
   }
 
