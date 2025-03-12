@@ -23,7 +23,7 @@ export const providers: Provider[] = [
   },
   {
     id: "together",
-    name: "Together.ai",
+    name: "Together",
     logo: <TogetherAIIcon />,
   },
   {
