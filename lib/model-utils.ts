@@ -1,12 +1,68 @@
-import { ModelRow, HuggingFaceDatasetResponse } from "@/types/huggingface";
+import {
+  ModelRow,
+  HuggingFaceDatasetResponse,
+  Provider,
+} from "@/types/huggingface";
 import { Provider as UIProvider } from "@/components/provider-tabs";
 import { providers } from "@/data/providers";
+
+export enum ComparisonState {
+  LOW = "LOW",
+  MEDIUM = "MEDIUM",
+  HIGH = "HIGH",
+  NEUTRAL = "NEUTRAL",
+}
 
 /**
  * Formats a numeric price to a dollar string with appropriate precision
  */
 export function formatPrice(price: number): string {
   return "$" + price.toFixed(6).replace(/\.?0+$/, "");
+}
+
+/**
+ * Calculates the median context window size from a model's providers
+ */
+export function calculateMedianContextWindow(model: ModelRow): number {
+  if (!model.providers || model.providers.length === 0) {
+    return 0;
+  }
+
+  const contextWindows = model.providers
+    .filter((provider) => provider.context != null && provider.context > 0)
+    .map((provider) => provider.context)
+    .sort((a, b) => a - b);
+
+  if (contextWindows.length === 0) {
+    return 0;
+  }
+
+  const midpoint = Math.floor(contextWindows.length / 2);
+
+  if (contextWindows.length % 2 === 0) {
+    return (contextWindows[midpoint - 1] + contextWindows[midpoint]) / 2;
+  } else {
+    return contextWindows[midpoint];
+  }
+}
+
+/**
+ * Formats a context window size to a readable string
+ */
+export function formatContextWindow(contextWindow: number): string {
+  if (
+    contextWindow === null ||
+    contextWindow === undefined ||
+    contextWindow === 0
+  ) {
+    return "N/A";
+  }
+
+  if (contextWindow >= 1000) {
+    return `${(contextWindow / 1000).toFixed(0)}K`;
+  }
+
+  return `${contextWindow.toFixed(0)}`;
 }
 
 /**
@@ -41,15 +97,171 @@ export function calculateMedianThroughput(model: ModelRow): number {
  * Formats a throughput value to a readable string
  */
 export function formatThroughput(throughput: number): string {
-  if (throughput === 0) {
+  if (throughput === null || throughput === undefined || throughput === 0) {
     return "N/A";
   }
 
   if (throughput >= 1000) {
-    return `${(throughput / 1000).toFixed(1)}K tok/s`;
+    return `${(throughput / 1000).toFixed(1)}K`;
   }
 
-  return `${throughput.toFixed(1)} tok/s`;
+  return `${throughput.toFixed(1)}`;
+}
+
+/**
+ * Calculates the median of an array of numbers
+ */
+export function calculateMedian(values: number[]): number {
+  if (values.length === 0) return 0;
+
+  const sorted = [...values].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+
+  if (sorted.length % 2 === 0) {
+    return (sorted[middle - 1] + sorted[middle]) / 2;
+  } else {
+    return sorted[middle];
+  }
+}
+
+/**
+ * Evaluates whether the values in an array have low deviation from the median
+ */
+export function hasLowDeviation(values: number[], threshold = 0.05): boolean {
+  if (values.length <= 3) return false;
+
+  const median = calculateMedian(values);
+  const maxDeviation = Math.max(...values.map((val) => Math.abs(val - median)));
+
+  return maxDeviation < median * threshold;
+}
+
+/**
+ * Determines the comparison state for a cost value (lower is better)
+ */
+export function getCostComparisonState(
+  value: number | null | undefined,
+  validValues: number[],
+): ComparisonState {
+  if (value == null || validValues.length <= 3) {
+    return ComparisonState.NEUTRAL;
+  }
+
+  const median = calculateMedian(validValues);
+
+  if (hasLowDeviation(validValues)) {
+    return ComparisonState.MEDIUM;
+  }
+
+  if (value < median * 0.9) {
+    return ComparisonState.LOW;
+  }
+
+  if (value < median * 1.1) {
+    return ComparisonState.MEDIUM;
+  }
+
+  return ComparisonState.HIGH;
+}
+
+/**
+ * Determines the comparison state for a performance value (higher is better)
+ */
+export function getPerformanceComparisonState(
+  value: number | null | undefined,
+  validValues: number[],
+): ComparisonState {
+  if (value == null || value <= 0 || validValues.length <= 3) {
+    return ComparisonState.NEUTRAL;
+  }
+
+  const median = calculateMedian(validValues);
+
+  if (hasLowDeviation(validValues)) {
+    return ComparisonState.MEDIUM;
+  }
+
+  if (value > median * 1.1) {
+    return ComparisonState.HIGH;
+  }
+
+  if (value > median * 0.9) {
+    return ComparisonState.MEDIUM;
+  }
+
+  return ComparisonState.LOW;
+}
+
+/**
+ * Gets the CSS class for a given comparison state
+ * @param state The comparison state
+ * @param isPerformance Whether this is a performance metric (higher is better)
+ */
+export function getComparisonStateClass(
+  state: ComparisonState,
+  isPerformance = false,
+): string {
+  // For performance metrics (higher is better), invert the styling
+  if (isPerformance) {
+    switch (state) {
+      case ComparisonState.HIGH:
+        return "bg-green-50 dark:bg-green-950/30 text-green-800 dark:text-green-300";
+      case ComparisonState.MEDIUM:
+        return "bg-yellow-50 dark:bg-yellow-950/30 text-yellow-800 dark:text-yellow-300";
+      case ComparisonState.LOW:
+        return "bg-red-50 dark:bg-red-950/30 text-red-800 dark:text-red-300";
+      case ComparisonState.NEUTRAL:
+      default:
+        return "";
+    }
+  }
+
+  // For cost metrics (lower is better), use original styling
+  switch (state) {
+    case ComparisonState.LOW:
+      return "bg-green-50 dark:bg-green-950/30 text-green-800 dark:text-green-300";
+    case ComparisonState.MEDIUM:
+      return "bg-yellow-50 dark:bg-yellow-950/30 text-yellow-800 dark:text-yellow-300";
+    case ComparisonState.HIGH:
+      return "bg-red-50 dark:bg-red-950/30 text-red-800 dark:text-red-300";
+    case ComparisonState.NEUTRAL:
+    default:
+      return "";
+  }
+}
+
+/**
+ * Gets the CSS class for cost values (input/output costs)
+ */
+export function getCostStateClass(
+  value: number | null | undefined,
+  providers: Provider[],
+  field: "input" | "output",
+): string {
+  const validValues = providers
+    .map((p) => p[field])
+    .filter((cost): cost is number => cost != null && cost > 0);
+
+  const state = getCostComparisonState(value, validValues);
+  return getComparisonStateClass(state);
+}
+
+/**
+ * Gets the CSS class for throughput values
+ */
+export function getThroughputStateClass(
+  value: number | null | undefined,
+  providers: Provider[],
+): string {
+  const validValues = providers
+    .map((p) => p.throughput)
+    .filter(
+      (throughput): throughput is number =>
+        throughput != null && throughput > 0,
+    );
+
+  const state = getPerformanceComparisonState(value, validValues);
+  return getComparisonStateClass(state, true);
 }
 
 /**

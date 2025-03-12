@@ -11,6 +11,7 @@ export interface Provider {
 export interface ModelRow {
   name: string;
   hf_id: string;
+  open_router_id: string;
   author: string;
   providers: Provider[];
   median_input_cost: number;

@@ -2,8 +2,6 @@ import SearchProviders from "@/components/search-providers";
 import React from "react";
 import { fetchAllRows, extractUniqueProviders } from "@/lib/model-utils";
 
-export const revalidate = 6 * 60 * 60; // invalidate every 6 hours
-
 export default async function Home() {
   const models = await fetchAllRows();
   const dynamicProviders = extractUniqueProviders(models);
@@ -25,7 +23,9 @@ export default async function Home() {
           </p>
         </div>
         <div className="max-w-6xl mx-auto">
-          <SearchProviders providers={dynamicProviders}  models={models}/>
+          <React.Suspense>
+            <SearchProviders providers={dynamicProviders} models={models} />
+          </React.Suspense>
         </div>
       </main>
     </div>

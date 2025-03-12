@@ -12,7 +12,7 @@ export function ModelGrid({ models, title }: ModelGridProps) {
     <div className="mt-8">
       {title && <h2 className="text-xl font-semibold mb-4">{title}</h2>}
 
-      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {models.map((model, index) => (
           <div key={index} className="w-full [content-visibility:auto]">
             <ModelCard model={model} />

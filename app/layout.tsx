@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "next-themes";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { Toaster } from "sonner";
 
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
@@ -45,6 +46,7 @@ export default function RootLayout({
             <TailwindIndicator />
           </ThemeProvider>
         </NuqsAdapter>
+        <Toaster />
       </body>
     </html>
   );
