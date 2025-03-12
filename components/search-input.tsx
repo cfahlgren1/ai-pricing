@@ -1,40 +1,43 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { Search, X } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { Search, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface SearchInputProps {
-  placeholder?: string
-  className?: string
-  value: string
-  onChange?: (value: string) => void
-  onSubmit?: (value: string) => void
+  placeholder?: string;
+  className?: string;
+  value: string;
+  onChange?: (value: string) => void;
+  onSubmit?: (value: string) => void;
 }
 
-export default function SearchInput({ 
-  placeholder = "Search...", 
-  className, 
+export default function SearchInput({
+  placeholder = "Search...",
+  className,
   value = "",
-  onChange, 
-  onSubmit 
+  onChange,
+  onSubmit,
 }: SearchInputProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange?.(e.target.value)
-  }
+    onChange?.(e.target.value);
+  };
 
   const handleClear = () => {
-    onChange?.("")
-  }
+    onChange?.("");
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSubmit?.(value)
-  }
+    e.preventDefault();
+    onSubmit?.(value);
+  };
 
   return (
-    <form className={cn("relative group max-w-md w-full", className)} onSubmit={handleSubmit}>
+    <form
+      className={cn("relative group max-w-md w-full", className)}
+      onSubmit={handleSubmit}
+    >
       <div className="relative">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground">
           <Search className="h-5 w-5" />
@@ -61,5 +64,5 @@ export default function SearchInput({
         )}
       </div>
     </form>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import SearchInput from "@/components/search-input";
 import ProviderTabs from "@/components/provider-tabs";
@@ -11,31 +11,32 @@ interface SearchProvidersProps {
 
 export default function SearchProviders({ providers }: SearchProvidersProps) {
   const [searchQuery, setSearchQuery] = useQueryState("q");
-  
+
   const handleSearchChange = (value: string) => {
     setSearchQuery(value || null);
   };
 
   const filteredProviders = searchQuery
-    ? providers.filter(provider => 
-        provider.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    ? providers.filter((provider) =>
+        provider.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
     : providers;
 
   return (
     <>
       <div className="w-full max-w-md mx-auto px-2 sm:px-0">
-        <SearchInput 
-          placeholder="Search for your favorite models or providers..." 
+        <SearchInput
+          placeholder="Search for your favorite models or providers..."
           onChange={handleSearchChange}
           value={searchQuery || ""}
         />
       </div>
-      
-      <div className="mt-4 w-full max-w-5xl mx-auto px-2 sm:px-0">
+
+      <div className="mt-4 w-full">
         {filteredProviders.length > 0 ? (
-          <ProviderTabs 
-            providers={filteredProviders} 
-            title="Providers" 
+          <ProviderTabs
+            providers={filteredProviders}
+            title="Providers"
             showViewAll={true}
           />
         ) : (
@@ -48,4 +49,4 @@ export default function SearchProviders({ providers }: SearchProvidersProps) {
       </div>
     </>
   );
-} 
+}

@@ -5,11 +5,14 @@ interface DeepmindIconProps extends React.SVGProps<SVGSVGElement> {
   className?: string;
 }
 
-export default function DeepmindIcon({ className, ...props }: DeepmindIconProps) {
+export default function DeepmindIcon({
+  className,
+  ...props
+}: DeepmindIconProps) {
   return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      viewBox="0 0 24 24" 
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
       className={cn("fill-current", className)}
       {...props}
     >

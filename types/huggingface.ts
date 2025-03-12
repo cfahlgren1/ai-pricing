@@ -45,8 +45,8 @@ export interface Feature {
 
 export interface HuggingFaceDatasetResponse {
   features: Feature[];
-  rows: {row_idx: number, row: ModelRow}[];
+  rows: { row_idx: number; row: ModelRow }[];
   num_rows_total: number;
   num_rows_per_page: number;
   partial: boolean;
-} 
+}

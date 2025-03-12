@@ -1,9 +1,9 @@
-import type { Provider } from "@/components/provider-tabs"
-import OpenAIIcon from "@/components/icons/OpenAIIcon"
-import AnthropicIcon from "@/components/icons/AnthropicIcon"
-import DeepmindIcon from "@/components/icons/DeepmindIcon"
-import TogetherAIIcon from "@/components/icons/TogetherAIIcon"
-import FireworksAIIcon from "@/components/icons/FireworksAIIcon"
+import type { Provider } from "@/components/provider-tabs";
+import OpenAIIcon from "@/components/icons/OpenAIIcon";
+import AnthropicIcon from "@/components/icons/AnthropicIcon";
+import DeepmindIcon from "@/components/icons/DeepmindIcon";
+import TogetherAIIcon from "@/components/icons/TogetherAIIcon";
+import FireworksAIIcon from "@/components/icons/FireworksAIIcon";
 
 export const providers: Provider[] = [
   {
