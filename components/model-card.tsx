@@ -60,9 +60,9 @@ export function ModelCard({ model }: ModelCardProps) {
       </CardHeader>
       
       <CardContent className="p-3 flex-grow flex items-center justify-center">
-        <div className="w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 rounded-lg relative">
+        <div className="w-full h-full bg-gradient-to-br from-[#f8f9fa] to-[#f1f3f5] dark:from-[#2a2a2a] dark:to-[#222222] rounded-lg relative">
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="absolute w-[35%] h-[2px] bg-slate-200 dark:bg-slate-700 rotate-[-35deg]"></div>
+            <div className="absolute w-[35%] h-[2px] bg-[#e9ecef] dark:bg-[#444444] rotate-[-35deg]"></div>
             
             <div className="w-full flex flex-col items-center gap-3 z-10">
               <div className="flex flex-col items-center transform -translate-x-[25%] md:-translate-x-[20%] lg:-translate-x-[25%] 2xl:-translate-x-[40%] -translate-y-2 md:-translate-y-0.5 lg:-translate-y-2 2xl:-translate-y-3">
@@ -81,8 +81,8 @@ export function ModelCard({ model }: ModelCardProps) {
             </div>
           </div>
           
-          <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600"></div>
-          <div className="absolute bottom-1/3 left-1/3 w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600"></div>
+          <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 rounded-full bg-[#ced4da] dark:bg-[#555555]"></div>
+          <div className="absolute bottom-1/3 left-1/3 w-1.5 h-1.5 rounded-full bg-[#ced4da] dark:bg-[#555555]"></div>
         </div>
       </CardContent>
     </Card>
