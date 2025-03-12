@@ -16,18 +16,20 @@ export function calculateMedianThroughput(model: ModelRow): number {
   if (!model.providers || model.providers.length === 0) {
     return 0;
   }
-  
+
   const throughputs = model.providers
-    .filter(provider => provider.throughput != null && provider.throughput > 0)
-    .map(provider => provider.throughput)
+    .filter(
+      (provider) => provider.throughput != null && provider.throughput > 0,
+    )
+    .map((provider) => provider.throughput)
     .sort((a, b) => a - b);
-  
+
   if (throughputs.length === 0) {
     return 0;
   }
-  
+
   const midpoint = Math.floor(throughputs.length / 2);
-  
+
   if (throughputs.length % 2 === 0) {
     return (throughputs[midpoint - 1] + throughputs[midpoint]) / 2;
   } else {
@@ -42,11 +44,11 @@ export function formatThroughput(throughput: number): string {
   if (throughput === 0) {
     return "N/A";
   }
-  
+
   if (throughput >= 1000) {
     return `${(throughput / 1000).toFixed(1)}K tok/s`;
   }
-  
+
   return `${throughput.toFixed(1)} tok/s`;
 }
 
@@ -122,9 +124,9 @@ export function extractUniqueProviders(models: ModelRow[]): UIProvider[] {
 
     providersWithIcons.push({
       id: providerName,
-      name: providerName.charAt(0).toUpperCase() + providerName.slice(1), 
+      name: providerName.charAt(0).toUpperCase() + providerName.slice(1),
     });
   }
 
   return providersWithIcons;
-} 
+}

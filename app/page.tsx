@@ -1,5 +1,4 @@
 import SearchProviders from "@/components/search-providers";
-import { ModelGrid } from "@/components/model-grid";
 import React from "react";
 import { fetchAllRows, extractUniqueProviders } from "@/lib/model-utils";
 
@@ -26,8 +25,7 @@ export default async function Home() {
           </p>
         </div>
         <div className="max-w-6xl mx-auto">
-          <SearchProviders providers={dynamicProviders} />
-          <ModelGrid models={models} title="Models" />
+          <SearchProviders providers={dynamicProviders}  models={models}/>
         </div>
       </main>
     </div>
