@@ -20,7 +20,7 @@ import {
 } from "@/lib/model-utils";
 import OpenRouterIcon from "./icons/OpenRouterIcon";
 import { Rabbit, Ruler } from "lucide-react";
-import { ProviderSheet } from "@/components/provider-sheet";
+import { ProviderSheet } from "./provider-sheet";
 import { cn } from "@/lib/utils";
 
 interface ModelCardProps {
@@ -139,48 +139,45 @@ export function ModelCard({ model }: ModelCardProps) {
 
       <CardContent className="p-2 flex-grow flex items-center justify-center">
         <div className={cn(
-          "w-full h-full rounded-lg relative overflow-hidden",
+          "w-full h-full rounded-lg relative overflow-hidden px-5 sm:px-6 md:px-8",
           "bg-gradient-to-br from-[#f5f7f9] to-[#e9edf1] dark:from-[#242426] dark:to-[#1e1e20]",
           "group-hover:from-[#f1f5f9] to-[#e5ebf0] dark:group-hover:from-[#28282a] dark:group-hover:to-[#222224]",
           "transition-colors duration-300"
         )}>
-          <div className="absolute w-1.5 h-1.5 top-[22%] right-[30%] rounded-full bg-gray-200 dark:bg-gray-700"></div>
-          <div className="absolute w-1.5 h-1.5 bottom-[22%] left-[30%] rounded-full bg-gray-200 dark:bg-gray-700"></div>
-
           <div className="absolute inset-0 [background-image:linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] dark:[background-image:linear-gradient(to_right,rgba(75,85,99,0.2)_1px,transparent_1px),linear-gradient(to_bottom,rgba(75,85,99,0.2)_1px,transparent_1px)] [background-size:14px_14px] opacity-[0.05]"></div>
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="absolute w-[40%] h-[1.5px] bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent rotate-[-35deg]"></div>
-
-            <div className="w-full flex flex-col items-center gap-2 z-10">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-10/12 flex flex-row items-center justify-center gap-5 sm:gap-6 z-10">
+              {/* Input Price Box */}
               <div className={cn(
-                "flex flex-col items-center transform",
-                "-translate-x-[35%] md:-translate-x-[25%] lg:-translate-x-[35%] xl:-translate-x-[40%]",
-                "-translate-y-1 md:-translate-y-1 lg:-translate-y-1 xl:-translate-y-1",
-                "transition-transform duration-300 group-hover:-translate-y-2"
+                "flex flex-col items-center transition-transform duration-300 group-hover:-translate-y-1",
+                "py-4 px-4 rounded-lg bg-blue-50/50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/40",
+                "hover:bg-blue-50/80 dark:hover:bg-blue-950/40",
+                "min-w-[95px] sm:min-w-[105px]"
               )}>
-                <span className="text-xs lg:text-xs xl:text-[10px] font-medium text-muted-foreground tracking-wider">
+                <span className="text-xs lg:text-xs xl:text-[11px] font-medium text-blue-600 dark:text-blue-400 tracking-wider mb-1">
                   INPUT
                 </span>
                 <div className="relative group/price">
-                  <div className="font-mono text-4xl lg:text-3xl xl:text-2xl font-bold leading-tight tracking-tight transition-all">
+                  <div className="font-mono text-3xl lg:text-2xl xl:text-2xl font-bold leading-tight tracking-tight transition-all">
                     {formatPrice(model.median_input_cost)}
                   </div>
                   <div className="absolute -inset-1 bg-blue-500/5 dark:bg-blue-500/10 rounded-xl blur opacity-75 group-hover/price:opacity-100 transition duration-300 -z-10"></div>
                 </div>
               </div>
 
+              {/* Output Price Box */}
               <div className={cn(
-                "flex flex-col items-center transform",
-                "translate-x-[35%] md:translate-x-[25%] lg:translate-x-[35%] xl:translate-x-[40%]",
-                "translate-y-1 md:translate-y-1 lg:translate-y-1 xl:translate-y-1",
-                "transition-transform duration-300 group-hover:translate-y-2"
+                "flex flex-col items-center transition-transform duration-300 group-hover:-translate-y-1",
+                "py-4 px-4 rounded-lg bg-green-50/50 dark:bg-green-950/30 border border-green-100 dark:border-green-900/40",
+                "hover:bg-green-50/80 dark:hover:bg-green-950/40",
+                "min-w-[95px] sm:min-w-[105px]"
               )}>
-                <span className="text-xs lg:text-xs xl:text-[10px] font-medium text-muted-foreground tracking-wider">
+                <span className="text-xs lg:text-xs xl:text-[11px] font-medium text-green-600 dark:text-green-400 tracking-wider mb-1">
                   OUTPUT
                 </span>
                 <div className="relative group/price">
-                  <div className="font-mono text-4xl lg:text-3xl xl:text-2xl font-bold leading-tight tracking-tight transition-all">
+                  <div className="font-mono text-3xl lg:text-2xl xl:text-2xl font-bold leading-tight tracking-tight transition-all">
                     {formatPrice(model.median_output_cost)}
                   </div>
                   <div className="absolute -inset-1 bg-green-500/5 dark:bg-green-500/10 rounded-xl blur opacity-75 group-hover/price:opacity-100 transition duration-300 -z-10"></div>
@@ -192,22 +189,25 @@ export function ModelCard({ model }: ModelCardProps) {
       </CardContent>
 
       <CardFooter className="p-2 pt-0 mt-auto w-full">
-        {providerCount === 0 ? (
-          <div className="text-xs text-muted-foreground w-full text-center">
-            No provider information available
-          </div>
-        ) : providerCount === 1 ? (
-          <div className="text-xs text-muted-foreground w-full text-center">
-            {firstProvider}
-          </div>
-        ) : (
-          <ProviderSheet 
-            open={sheetOpen}
-            onOpenChange={setSheetOpen}
-            model={model}
-            providersText={providersText}
-          />
-        )}
+        <div className="flex flex-col items-center w-full">
+          {providerCount === 0 ? (
+            <div className="text-xs text-muted-foreground w-full text-center">
+              No provider information available
+            </div>
+          ) : providerCount === 1 ? (
+            <div className="text-xs text-muted-foreground w-full text-center">
+              {firstProvider}
+            </div>
+          ) : (
+            <ProviderSheet 
+              open={sheetOpen}
+              onOpenChange={setSheetOpen}
+              model={model}
+              providersText={providersText}
+              sheetOpen={sheetOpen}
+            />
+          )}
+        </div>
       </CardFooter>
     </Card>
   );

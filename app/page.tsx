@@ -2,6 +2,8 @@ import SearchProviders from "@/components/search-providers";
 import React from "react";
 import { fetchAllRows, extractUniqueProviders } from "@/lib/model-utils";
 
+export const revalidate = 43200; // 12 hours
+
 export default async function Home() {
   const models = await fetchAllRows();
   const dynamicProviders = extractUniqueProviders(models);

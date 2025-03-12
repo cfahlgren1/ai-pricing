@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { ModelRow } from "@/types/huggingface";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUpDown, ArrowUp, ArrowDown, Maximize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
@@ -17,6 +17,7 @@ import {
   getCostStateClass,
   getThroughputStateClass,
 } from "@/lib/model-utils";
+import Link from "next/link";
 
 type SortField = "input" | "output" | "context" | "throughput" | null;
 type SortDirection = "asc" | "desc";
@@ -122,12 +123,12 @@ export function ProviderSheet({ model, open, onOpenChange, providersText, sheetO
         <Button
           variant="ghost"
           size="sm"
-          className="text-xs text-muted-foreground hover:text-foreground w-full justify-between group transition-all duration-200"
+          className="text-xs text-muted-foreground hover:text-foreground w-full justify-between group transition-all duration-200 pr-3"
         >
           <span className="flex items-center gap-1.5">
             {sheetOpen ? getSortStateText() : providersText}
           </span>
-          <ChevronDown className="h-3.5 w-3.5 opacity-50 group-hover:opacity-80 transition-all duration-200" />
+          <Maximize2 className="h-3.5 w-3.5 opacity-50 group-hover:opacity-80 transition-all duration-200" />
         </Button>
       </SheetTrigger>
       <SheetContent
@@ -318,6 +319,21 @@ export function ProviderSheet({ model, open, onOpenChange, providersText, sheetO
             )}
           </div>
         </div>
+
+        {model.open_router_id && (
+          <div className="text-center text-xs text-muted-foreground/70 pb-6 pt-3 mt-4 border-t border-border/20">
+            <div className="max-w-2xl mx-auto px-4">
+              Data from {" "}
+              <Link 
+                href={`https://openrouter.ai/models/${model.open_router_id}`}
+                target="_blank" 
+                className="text-blue-500 dark:text-blue-400 hover:underline"
+              >
+                OpenRouter
+              </Link>
+            </div>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );
