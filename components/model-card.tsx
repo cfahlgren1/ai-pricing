@@ -140,23 +140,19 @@ export function ModelCard({ model }: ModelCardProps) {
       <CardContent className="p-2 flex-grow flex items-center justify-center">
         <div className={cn(
           "w-full h-full rounded-lg relative overflow-hidden",
-          "bg-gradient-to-br from-[#f8f9fa] to-[#f1f3f5] dark:from-[#2a2a2a] dark:to-[#222222]",
-          "group-hover:from-[#f5f7fa] group-hover:to-[#eef0f2] dark:group-hover:from-[#2e2e2e] dark:group-hover:to-[#262626]",
+          "bg-gradient-to-br from-[#f5f7f9] to-[#e9edf1] dark:from-[#242426] dark:to-[#1e1e20]",
+          "group-hover:from-[#f1f5f9] to-[#e5ebf0] dark:group-hover:from-[#28282a] dark:group-hover:to-[#222224]",
           "transition-colors duration-300"
         )}>
-          {/* Decorative elements */}
           <div className="absolute w-1.5 h-1.5 top-[22%] right-[30%] rounded-full bg-gray-200 dark:bg-gray-700"></div>
           <div className="absolute w-1.5 h-1.5 bottom-[22%] left-[30%] rounded-full bg-gray-200 dark:bg-gray-700"></div>
 
-          {/* Grid background using Tailwind */}
           <div className="absolute inset-0 [background-image:linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] dark:[background-image:linear-gradient(to_right,rgba(75,85,99,0.2)_1px,transparent_1px),linear-gradient(to_bottom,rgba(75,85,99,0.2)_1px,transparent_1px)] [background-size:14px_14px] opacity-[0.05]"></div>
 
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            {/* Divider line using Tailwind */}
             <div className="absolute w-[40%] h-[1.5px] bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent rotate-[-35deg]"></div>
 
             <div className="w-full flex flex-col items-center gap-2 z-10">
-              {/* Input price */}
               <div className={cn(
                 "flex flex-col items-center transform",
                 "-translate-x-[35%] md:-translate-x-[25%] lg:-translate-x-[35%] xl:-translate-x-[40%]",
@@ -174,7 +170,6 @@ export function ModelCard({ model }: ModelCardProps) {
                 </div>
               </div>
 
-              {/* Output price */}
               <div className={cn(
                 "flex flex-col items-center transform",
                 "translate-x-[35%] md:translate-x-[25%] lg:translate-x-[35%] xl:translate-x-[40%]",
@@ -218,7 +213,6 @@ export function ModelCard({ model }: ModelCardProps) {
   );
 }
 
-// Extracted scrollbar styles into a separate component
 export function ScrollbarStyles() {
   if (typeof window === "undefined" || document.getElementById("custom-scrollbar-style")) {
     return null;
@@ -258,7 +252,6 @@ export function ScrollbarStyles() {
   return null;
 }
 
-// Initialize scrollbar styles
 if (typeof window !== "undefined") {
   ScrollbarStyles();
 }
