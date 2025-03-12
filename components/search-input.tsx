@@ -42,7 +42,7 @@ export default function SearchInput({ placeholder = "Search...", className, onCh
           type="text"
           value={value}
           onChange={handleChange}
-          className="block w-full py-2.5 pl-10 pr-10 bg-background border border-input rounded-lg 
+          className="block w-full py-2.5 pl-10 pr-10 bg-background border border-input rounded-full 
                     focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none
                     transition-all duration-200 shadow-sm hover:border-primary/50 text-sm
                     [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden [&::-ms-clear]:hidden placeholder:text-sm"

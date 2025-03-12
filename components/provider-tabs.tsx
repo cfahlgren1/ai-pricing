@@ -34,8 +34,8 @@ export default function ProviderTabs({
 
   return (
     <div className={cn("w-full", className)} {...props}>
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-medium">{title}</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 sm:mb-4 gap-2">
+        <h2 className="text-lg sm:text-xl font-medium">{title}</h2>
         {showViewAll && (
           <Link 
             href={viewAllHref}
@@ -45,7 +45,7 @@ export default function ProviderTabs({
           </Link>
         )}
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 sm:gap-3">
         {providers.map((provider) => {
           const isSelected = selectedProvider === provider.id
           return (
@@ -53,16 +53,16 @@ export default function ProviderTabs({
               key={provider.id}
               onClick={() => handleProviderClick(provider.id)}
               className={cn(
-                "flex items-center gap-2 px-3 py-2 border rounded-full text-sm font-medium transition-all duration-200",
+                "flex items-center gap-2 px-3 py-2.5 border rounded-full text-sm font-medium transition-all duration-200 min-w-16 touch-manipulation",
                 isSelected 
                   ? "bg-primary border-primary text-primary-foreground" 
-                  : "bg-card border-border hover:bg-accent hover:border-accent hover:bg-card/80 hover:scale-105 hover:shadow-sm"
+                  : "bg-card border-border hover:border-accent hover:bg-card/80 hover:scale-105 hover:shadow-sm"
               )}
             >
               <span className="flex items-center justify-center size-5 text-inherit">
                 {provider.logo}
               </span>
-              {provider.name}
+              <span className="truncate">{provider.name}</span>
             </button>
           )
         })}

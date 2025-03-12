@@ -32,7 +32,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
-          <nav className="container mx-auto py-4 flex justify-end items-center">
+          <nav className="container mx-auto py-4 px-4 sm:px-6 flex justify-end items-center">
             <ThemeToggle />
           </nav>
           {children}
