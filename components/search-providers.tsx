@@ -3,7 +3,7 @@
 import SearchInput from "@/components/search-input";
 import ProviderTabs from "@/components/provider-tabs";
 import type { Provider } from "@/components/provider-tabs";
-import { useQueryState } from "nuqs";
+import { useQueryState, parseAsArrayOf, parseAsString } from "nuqs";
 import { ModelGrid } from "./model-grid";
 import { ModelRow } from "@/types/huggingface";
 import { useMemo, useCallback, useState, useEffect } from "react";
@@ -18,7 +18,7 @@ export default function SearchProviders({
   models,
 }: SearchProvidersProps) {
   const [searchQuery, setSearchQuery] = useQueryState("q");
-  const [selectedProvider] = useQueryState("provider");
+  const [selectedProviders] = useQueryState("providers", parseAsArrayOf(parseAsString));
   const [inputValue, setInputValue] = useState(searchQuery || "");
 
   useEffect(() => {
@@ -49,36 +49,59 @@ export default function SearchProviders({
     
     if (inputValue) {
       const query = inputValue.toLowerCase();
-      result = result.filter((model) =>
-        model.name.toLowerCase().includes(query) ||
-        (model.author && model.author.toLowerCase().includes(query))
-      );
+      result = result.filter((model) => {
+        // Check if model name matches
+        const nameMatches = model.name.toLowerCase().includes(query);
+        
+        // Check if author matches (if author exists)
+        const authorMatches = model.author ? 
+          model.author.toLowerCase().includes(query) : 
+          false;
+        
+        // Check if any provider matches
+        const providerMatches = model.providers.some((provider) => 
+          provider.name.toLowerCase().includes(query)
+        );
+        
+        return nameMatches || authorMatches || providerMatches;
+      });
     }
     
-    if (selectedProvider) {
+    // Filter by selected providers
+    if (selectedProviders && selectedProviders.length > 0) {
       result = result.filter((model) => 
         model.providers.some((provider) => 
-          provider.name.toLowerCase() === selectedProvider.toLowerCase()
+          selectedProviders.some(selectedProviderId => 
+            provider.name.toLowerCase() === selectedProviderId.toLowerCase()
+          )
         )
       );
     }
     
     return result;
-  }, [models, inputValue, selectedProvider]);
+  }, [models, inputValue, selectedProviders]);
 
   const modelGridTitle = useMemo(() => {
-    if (inputValue && selectedProvider) {
-      const providerName = providers.find(p => p.id === selectedProvider)?.name || selectedProvider;
-      return `${filteredModels.length} ${providerName} models for "${inputValue}"`;
-    } else if (selectedProvider) {
-      const providerName = providers.find(p => p.id === selectedProvider)?.name || selectedProvider;
-      return `${filteredModels.length} ${providerName} models`;
+    if (inputValue && selectedProviders && selectedProviders.length > 0) {
+      if (selectedProviders.length === 1) {
+        const providerName = providers.find(p => p.id === selectedProviders[0])?.name || selectedProviders[0];
+        return `${filteredModels.length} ${providerName} models for "${inputValue}"`;
+      } else {
+        return `${filteredModels.length} models from ${selectedProviders.length} providers for "${inputValue}"`;
+      }
+    } else if (selectedProviders && selectedProviders.length > 0) {
+      if (selectedProviders.length === 1) {
+        const providerName = providers.find(p => p.id === selectedProviders[0])?.name || selectedProviders[0];
+        return `${filteredModels.length} ${providerName} models`;
+      } else {
+        return `${filteredModels.length} models from ${selectedProviders.length} providers`;
+      }
     } else if (inputValue) {
       return `${filteredModels.length} models for "${inputValue}"`;
     } else {
       return "Models";
     }
-  }, [filteredModels.length, inputValue, selectedProvider, providers]);
+  }, [filteredModels.length, inputValue, selectedProviders, providers]);
 
   return (
     <>

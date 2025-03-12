@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { HTMLAttributes } from "react";
-import { useQueryState } from "nuqs";
+import { useQueryState, parseAsString, parseAsArrayOf } from "nuqs";
 
 export interface Provider {
   id: string;
@@ -26,10 +26,19 @@ export default function ProviderTabs({
   className,
   ...props
 }: ProviderTabsProps) {
-  const [selectedProvider, setSelectedProvider] = useQueryState("provider");
+  const [selectedProviders, setSelectedProviders] = useQueryState(
+    "providers",
+    parseAsArrayOf(parseAsString)
+  );
 
   const handleProviderClick = (providerId: string) => {
-    setSelectedProvider(providerId === selectedProvider ? null : providerId);
+    const currentProviders = selectedProviders || [];
+    
+    if (currentProviders.includes(providerId)) {
+      setSelectedProviders(currentProviders.filter(id => id !== providerId));
+    } else {
+      setSelectedProviders([...currentProviders, providerId]);
+    }
   };
 
   return (
@@ -48,13 +57,14 @@ export default function ProviderTabs({
       <div className="flex overflow-x-auto pb-2 -mb-2 snap-x no-scrollbar">
         <div className="flex gap-2 sm:gap-3 py-2">
           {providers.map((provider) => {
-            const isSelected = selectedProvider === provider.id;
+            const isSelected = selectedProviders?.includes(provider.id) || false;
+              
             return (
               <button
                 key={provider.id}
                 onClick={() => handleProviderClick(provider.id)}
                 className={cn(
-                  "flex items-center gap-2 px-3 py-2.5 border rounded-full text-sm font-medium transition-all duration-200 min-w-16 touch-manipulation snap-start shrink-0",
+                  "flex items-center gap-2 px-3 py-2.5 border rounded-full text-sm font-medium min-w-16 touch-manipulation snap-start shrink-0",
                   isSelected
                     ? "bg-primary border-primary text-primary-foreground"
                     : "bg-card border-border hover:border-accent hover:bg-card/80 hover:scale-105 hover:shadow-sm",
