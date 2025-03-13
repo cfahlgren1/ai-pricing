@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "next-themes";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "sonner";
+import { Github } from "lucide-react";
 
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
@@ -43,6 +44,19 @@ export default function RootLayout({
               <ThemeToggle />
             </nav>
             {children}
+            <footer className="container mx-auto py-6 px-4 sm:px-6 border-t border-border mt-8">
+              <div className="text-center text-sm text-muted-foreground">
+                <p>
+                  Made by <a href="https://x.com/calebfahlgren" target="_blank" rel="noopener noreferrer" className="text-black dark:text-white hover:underline">calebfahlgren</a> using data from <a href="https://openrouter.ai" target="_blank" rel="noopener noreferrer" className="text-black dark:text-white hover:underline">OpenRouter</a> and other sources.
+                </p>
+                <div className="mt-2 flex justify-center text-xs font-mono">
+                  <a href="https://github.com/cfahlgren1/ai-pricing" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-black dark:text-white hover:underline" aria-label="GitHub repository">
+                    <Github className="h-4 w-4 mr-1" />
+                    <span className="font-bold">Contribute</span>
+                  </a>
+                </div>
+              </div>
+            </footer>
             <TailwindIndicator />
           </ThemeProvider>
         </NuqsAdapter>

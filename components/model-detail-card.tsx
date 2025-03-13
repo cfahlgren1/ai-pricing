@@ -107,7 +107,7 @@ export function ModelDetailCard({ model }: ModelDetailCardProps) {
         >
           <Link href="/">
             <ArrowLeft className="h-4 w-4" />
-            <span>Back to models</span>
+            <span>Back</span>
           </Link>
         </Button>
       </div>
@@ -154,49 +154,61 @@ export function ModelDetailCard({ model }: ModelDetailCardProps) {
             </div>
           </CardTitle>
           {model.author && (
-            <CardDescription className="text-sm text-muted-foreground">
-              Created by {model.author}
+            <CardDescription className="text-muted-foreground">
+               by {model.author}
             </CardDescription>
           )}
         </CardHeader>
 
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="space-y-2">
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">Model Information</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-border/40">
+                <h3 className="text-sm font-medium">Performance</h3>
+              </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-muted/30 rounded-lg">
-                  <div className="text-xs text-muted-foreground mb-1">Context Window</div>
-                  <div className="font-mono text-xl font-semibold flex items-center gap-1">
-                    <Ruler className="h-4 w-4 text-muted-foreground" />
+                <div className="p-4 bg-gradient-to-br from-amber-50/90 to-amber-50/80 dark:from-amber-950/50 dark:to-amber-950/40 border border-amber-200/70 dark:border-amber-800/50 rounded-lg shadow-sm">
+                  <div className="text-xs text-amber-700 dark:text-amber-400 mb-1 font-medium">
+                    Context Window
+                  </div>
+                  <div className="font-mono text-xl font-semibold flex items-center gap-1 text-amber-800 dark:text-amber-300">
+                    <Ruler className="h-4 w-4 text-amber-600 dark:text-amber-500" />
                     {formatContextWindow(medianContextWindow)}
                   </div>
                 </div>
 
-                <div className="p-4 bg-muted/30 rounded-lg">
-                  <div className="text-xs text-muted-foreground mb-1">Throughput</div>
-                  <div className="font-mono text-xl font-semibold flex items-center gap-1">
-                    <Rabbit className="h-4 w-4 text-muted-foreground" />
+                <div className="p-4 bg-gradient-to-br from-purple-50/90 to-purple-50/80 dark:from-purple-950/50 dark:to-purple-950/40 border border-purple-200/70 dark:border-purple-800/50 rounded-lg shadow-sm">
+                  <div className="text-xs text-purple-700 dark:text-purple-400 mb-1 font-medium">
+                    Throughput
+                  </div>
+                  <div className="font-mono text-xl font-semibold flex items-center gap-1 text-purple-800 dark:text-purple-300">
+                    <Rabbit className="h-4 w-4 text-purple-600 dark:text-purple-500" />
                     {formatThroughput(medianThroughput)}
-                    <span className="text-sm ml-0.5">t/s</span>
+                    <span className="text-sm ml-0.5 text-purple-600 dark:text-purple-400">t/s</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">Median Pricing</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-border/40">
+                <h3 className="text-sm font-medium">Pricing</h3>
+              </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-blue-50/50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/40 rounded-lg">
-                  <div className="text-xs text-blue-600 dark:text-blue-400 mb-1">Input Price</div>
-                  <div className="font-mono text-xl font-semibold">
+                <div className="p-4 bg-gradient-to-br from-blue-50/90 to-blue-50/80 dark:from-blue-950/50 dark:to-blue-950/40 border border-blue-200/70 dark:border-blue-800/50 rounded-lg shadow-sm">
+                  <div className="text-xs text-blue-700 dark:text-blue-400 mb-1 font-medium">
+                    Input Price
+                  </div>
+                  <div className="font-mono text-xl font-semibold text-blue-800 dark:text-blue-300">
                     {formatPrice(model.median_input_cost)}
                   </div>
                 </div>
 
-                <div className="p-4 bg-green-50/50 dark:bg-green-950/30 border border-green-100 dark:border-green-900/40 rounded-lg">
-                  <div className="text-xs text-green-600 dark:text-green-400 mb-1">Output Price</div>
-                  <div className="font-mono text-xl font-semibold">
+                <div className="p-4 bg-gradient-to-br from-green-50/90 to-green-50/80 dark:from-green-950/50 dark:to-green-950/40 border border-green-200/70 dark:border-green-800/50 rounded-lg shadow-sm">
+                  <div className="text-xs text-green-700 dark:text-green-400 mb-1 font-medium">
+                    Output Price
+                  </div>
+                  <div className="font-mono text-xl font-semibold text-green-800 dark:text-green-300">
                     {formatPrice(model.median_output_cost)}
                   </div>
                 </div>
@@ -205,7 +217,14 @@ export function ModelDetailCard({ model }: ModelDetailCardProps) {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">Providers</h3>
+            <div className="flex items-center pb-2 border-b border-border/40">
+              <h3 className="text-sm font-medium">Available Providers</h3>
+              {model.providers && model.providers.length > 0 && (
+                <span className="ml-1.5 text-xs text-muted-foreground">
+                  ({model.providers.length})
+                </span>
+              )}
+            </div>
             {model.providers && model.providers.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">

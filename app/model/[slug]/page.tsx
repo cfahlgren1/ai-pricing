@@ -13,9 +13,11 @@ export async function generateStaticParams() {
   try {
     const models = await fetchAllRows();
     
-    return models.map((model) => ({
-      slug: model.name,
-    }));
+    return models
+      .filter(model => model.open_router_id)
+      .map((model) => ({
+        slug: model.open_router_id,
+      }));
   } catch (error) {
     console.error("Error generating static params:", error);
     return [];
@@ -33,7 +35,12 @@ export default async function ModelDetailPage({
   
   try {
     const models = await fetchAllRows();
-    const model = models.find((m) => m.name === decodedSlug);
+    const model = models.find((m) => 
+      // First try exact match with open_router_id
+      m.open_router_id === decodedSlug ||
+      // Fall back to checking if it's a name
+      (m.open_router_id === undefined && m.name === decodedSlug)
+    );
     
     if (!model) {
       notFound();
@@ -43,10 +50,6 @@ export default async function ModelDetailPage({
       <div className="bg-background text-foreground min-h-screen">
         <main className="container mx-auto py-8 px-4 sm:px-6">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl sm:text-3xl font-medium mb-6">
-              {model.name}
-            </h1>
-            
             <div className="space-y-8">
               <ModelDetailCard model={model} />
             </div>

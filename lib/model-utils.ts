@@ -281,24 +281,52 @@ export async function fetchAllRows(): Promise<ModelRow[]> {
     partial: false,
   };
 
-  while (true) {
-    const url = `${baseUrl}&offset=${offset}&length=${rowsPerPage}`;
-    const response = await fetch(url);
-    const data: HuggingFaceDatasetResponse = await response.json();
-
-    if (data.rows.length === 0) {
-      break;
+  try {
+    while (true) {
+      const url = `${baseUrl}&offset=${offset}&length=${rowsPerPage}`;
+      
+      try {
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+          console.error(`API responded with status: ${response.status}`);
+          break;
+        }
+        
+        const data: HuggingFaceDatasetResponse = await response.json();
+        
+        // Check if data has the expected structure
+        if (!data || !data.rows) {
+          console.error("Invalid API response format:", data);
+          break;
+        }
+        
+        if (data.rows.length === 0) {
+          break;
+        }
+        
+        allRows.rows.push(...data.rows);
+        offset += data.rows.length;
+        
+        // Check if we have all rows or if we need to continue pagination
+        if (data.num_rows_total && offset >= data.num_rows_total) {
+          break;
+        }
+        
+        // Safety check to prevent infinite loops if num_rows_total is missing
+        if (!data.num_rows_total && data.rows.length < rowsPerPage) {
+          break;
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        break;
+      }
     }
-
-    allRows.rows.push(...data.rows);
-    offset += data.rows.length;
-
-    if (offset >= data.num_rows_total) {
-      break;
-    }
+  } catch (error) {
+    console.error("Fatal error in fetchAllRows:", error);
   }
 
-  return allRows.rows.map((row) => row.row);
+  return allRows.rows.map((row) => row?.row).filter(Boolean);
 }
 
 /**
