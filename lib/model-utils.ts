@@ -125,6 +125,54 @@ export function calculateMedian(values: number[]): number {
 }
 
 /**
+ * Determines if the data has a wide distribution that needs special handling
+ */
+export function hasWideDistribution(values: number[]): boolean {
+  if (values.length <= 3) return false;
+  
+  const sortedValues = [...values].sort((a, b) => a - b);
+  
+  // Calculate the ratio between the max and min values
+  const min = sortedValues[0];
+  const max = sortedValues[sortedValues.length - 1];
+  
+  // If the max is more than 5x the min, we consider it a wide distribution
+  // This threshold can be adjusted based on your specific needs
+  return max / min > 5;
+}
+
+/**
+ * Calculates thresholds for comparison states based on the data distribution
+ */
+export function calculateAdaptiveThresholds(values: number[]): { lowThreshold: number, highThreshold: number } {
+  // Default values if we can't calculate
+  if (values.length <= 3) {
+    return { lowThreshold: 0.9, highThreshold: 1.1 };
+  }
+  
+  const sortedValues = [...values].sort((a, b) => a - b);
+  const median = calculateMedian(values);
+  
+  if (hasWideDistribution(values)) {
+    // For wide distributions, use quartiles to determine thresholds
+    const q1Index = Math.floor(sortedValues.length / 4);
+    const q3Index = Math.floor(sortedValues.length * 3 / 4);
+    
+    const q1 = sortedValues[q1Index];
+    const q3 = sortedValues[q3Index];
+    
+    // Use the quartiles to determine the thresholds relative to median
+    const lowThreshold = q1 / median;
+    const highThreshold = q3 / median;
+    
+    return { lowThreshold, highThreshold };
+  } else {
+    // For more normal distributions, stick with percentages
+    return { lowThreshold: 0.9, highThreshold: 1.1 };
+  }
+}
+
+/**
  * Evaluates whether the values in an array have low deviation from the median
  */
 export function hasLowDeviation(values: number[], threshold = 0.05): boolean {
@@ -152,12 +200,14 @@ export function getCostComparisonState(
   if (hasLowDeviation(validValues)) {
     return ComparisonState.MEDIUM;
   }
+  
+  const { lowThreshold, highThreshold } = calculateAdaptiveThresholds(validValues);
 
-  if (value < median * 0.9) {
+  if (value < median * lowThreshold) {
     return ComparisonState.LOW;
   }
 
-  if (value < median * 1.1) {
+  if (value < median * highThreshold) {
     return ComparisonState.MEDIUM;
   }
 
@@ -180,12 +230,14 @@ export function getPerformanceComparisonState(
   if (hasLowDeviation(validValues)) {
     return ComparisonState.MEDIUM;
   }
+  
+  const { lowThreshold, highThreshold } = calculateAdaptiveThresholds(validValues);
 
-  if (value > median * 1.1) {
+  if (value > median * highThreshold) {
     return ComparisonState.HIGH;
   }
 
-  if (value > median * 0.9) {
+  if (value > median * lowThreshold) {
     return ComparisonState.MEDIUM;
   }
 
