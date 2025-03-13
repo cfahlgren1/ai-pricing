@@ -24,6 +24,7 @@ import {
 import OpenRouterIcon from "./icons/OpenRouterIcon";
 import { Rabbit, Ruler, ArrowLeft, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { authors } from "@/data/authors";
 
 type SortField = "name" | "input" | "output" | "context" | "throughput" | null;
 type SortDirection = "asc" | "desc";
@@ -38,6 +39,10 @@ export function ModelDetailCard({ model }: ModelDetailCardProps) {
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const router = useRouter();
+
+  const authorData = model.author ? authors.find(a => 
+    model.author.toLowerCase().includes(a.id)
+  ) : null;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -134,7 +139,16 @@ export function ModelDetailCard({ model }: ModelDetailCardProps) {
       <Card className="overflow-hidden">
         <CardHeader className="border-b border-border/40 pb-4">
           <CardTitle className="flex justify-between items-center">
-            <span className="text-xl font-semibold">{model.name}</span>
+            <div className="flex items-center gap-2">
+              {authorData && (
+                <span className="inline-flex items-center justify-center rounded-full border border-border bg-background w-8 h-8">
+                  <div className="h-5 w-5 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full">
+                    {authorData.logo}
+                  </div>
+                </span>
+              )}
+              <span className="text-xl font-semibold">{model.name}</span>
+            </div>
             <div className="flex items-center gap-2">
               {model.open_router_id && (
                 <Button
@@ -172,7 +186,7 @@ export function ModelDetailCard({ model }: ModelDetailCardProps) {
               )}
             </div>
           </CardTitle>
-          {model.author && (
+          {model.author && !authorData && (
             <CardDescription className="text-muted-foreground">
                by {model.author}
             </CardDescription>

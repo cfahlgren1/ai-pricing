@@ -22,6 +22,7 @@ import OpenRouterIcon from "./icons/OpenRouterIcon";
 import { Rabbit, Ruler } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
+import { authors } from "@/data/authors";
 
 interface ModelCardProps {
   model: ModelRow;
@@ -46,6 +47,10 @@ export function ModelCard({ model }: ModelCardProps) {
   const outputCost = providerOutput ?? model.median_output_cost;
   const throughput = providerThroughput ?? calculateMedianThroughput(model);
   const contextWindow = providerContext ?? calculateMedianContextWindow(model);
+
+  const authorData = model.author ? authors.find(a => 
+    model.author.toLowerCase().includes(a.id)
+  ) : null;
 
   let providersText = "";
   if (selectedProviderData) {
@@ -90,12 +95,21 @@ export function ModelCard({ model }: ModelCardProps) {
         <div className="absolute inset-x-0 -bottom-1 h-[2px] bg-gradient-to-r from-transparent via-slate-300/40 dark:via-slate-600/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         
         <CardHeader className="pb-1 flex-shrink-0 p-2 pt-3">
-          <CardTitle
-            className="text-lg md:text-base lg:text-sm xl:text-sm font-medium truncate"
-            title={model.name}
-          >
-            {model.name}
-          </CardTitle>
+          <div className="flex items-center gap-2">
+            {authorData && (
+              <span className="inline-flex items-center justify-center rounded-full border border-border bg-background w-7 h-7">
+                <div className="h-4 w-4 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full">
+                  {authorData.logo}
+                </div>
+              </span>
+            )}
+            <CardTitle
+              className="text-lg md:text-base lg:text-sm xl:text-sm font-medium truncate"
+              title={model.name}
+            >
+              {model.name}
+            </CardTitle>
+          </div>
 
           <div className="flex flex-wrap items-center gap-1 mt-1">
             <Button
