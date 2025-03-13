@@ -1,65 +1,103 @@
 "use client";
 
-import type React from "react";
-
-import { Search, X } from "lucide-react";
+import { Search, X, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import * as React from "react";
 
-interface SearchInputProps {
-  placeholder?: string;
-  className?: string;
+interface SearchInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value" | "onSubmit"> {
   value: string;
   onChange?: (value: string) => void;
   onSubmit?: (value: string) => void;
+  isLoading?: boolean;
+  className?: string;
+  containerClassName?: string;
+  autoFocus?: boolean;
 }
 
 export default function SearchInput({
   placeholder = "Search...",
   className,
+  containerClassName,
   value = "",
   onChange,
   onSubmit,
+  isLoading = false,
+  autoFocus = true,
+  ...props
 }: SearchInputProps) {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  
+  React.useEffect(() => {
+    if (autoFocus && inputRef.current) {
+      // Focus immediately without delay
+      inputRef.current.focus();
+    }
+  }, [autoFocus]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange?.(e.target.value);
   };
 
   const handleClear = () => {
     onChange?.("");
+    inputRef.current?.focus();
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit?.(value);
   };
+  
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Allow Escape key to clear the search
+    if (e.key === "Escape" && value) {
+      e.preventDefault();
+      handleClear();
+    }
+  };
 
   return (
     <form
-      className={cn("relative group max-w-md w-full", className)}
+      className={cn("relative group w-full max-w-xl", containerClassName)}
       onSubmit={handleSubmit}
+      role="search"
     >
       <div className="relative">
-        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground">
-          <Search className="h-5 w-5" />
+        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-muted-foreground">
+          {isLoading ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : (
+            <Search className="h-5 w-5" />
+          )}
         </div>
-        <input
-          type="text"
+        <Input
+          ref={inputRef}
+          type="search"
           value={value}
           onChange={handleChange}
-          className="block w-full py-3 pl-10 pr-10 bg-background border border-input rounded-lg 
-                    focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none
-                    transition-all duration-200 shadow-sm hover:border-primary/50 text-[15px]
-                    [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden [&::-ms-clear]:hidden placeholder:text-[15px]"
+          onKeyDown={handleKeyDown}
+          className={cn(
+            "pl-12 pr-12 py-6 text-base rounded-md",
+            "shadow hover:shadow-md focus:shadow-lg",
+            "border border-input/30 dark:border-input/40 focus:border-primary/40 dark:focus:border-primary/50",
+            "transition-all duration-200 ease-in-out",
+            "[&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden [&::-ms-clear]:hidden",
+            "focus:ring-2 focus:ring-primary/10 focus:outline-none",
+            className
+          )}
           placeholder={placeholder}
+          aria-label={placeholder}
+          {...props}
         />
         {value && (
           <button
             type="button"
             onClick={handleClear}
-            className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground"
+            className="absolute inset-y-0 right-0 flex items-center pr-4 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Clear search"
           >
             <X className="h-5 w-5" />
-            <span className="sr-only">Clear search</span>
           </button>
         )}
       </div>
