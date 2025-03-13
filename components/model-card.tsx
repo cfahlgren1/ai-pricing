@@ -116,7 +116,7 @@ export function ModelCard({ model }: ModelCardProps) {
             <Button
               variant="default"
               className={cn(
-                "text-xs tracking-tighter md:text-[10px] lg:text-[10px] xl:text-[9px] px-2 py-0.5 h-auto font-mono font-bold",
+                "text-xs tracking-tighter md:text-[10px] lg:text-[10px] px-2 py-0.5 h-auto font-mono font-bold",
                 "bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950/40 dark:to-purple-900/40",
                 "text-purple-600 dark:text-purple-300 hover:from-purple-100 hover:to-purple-200",
                 "dark:hover:from-purple-950/70 dark:hover:to-purple-900/70 border border-purple-200 dark:border-purple-800/30",
@@ -134,7 +134,7 @@ export function ModelCard({ model }: ModelCardProps) {
             <Button
               variant="default"
               className={cn(
-                "text-xs tracking-tighter md:text-[10px] lg:text-[10px] xl:text-[9px] px-2 py-0.5 h-auto font-mono font-bold",
+                "text-xs tracking-tighter md:text-[10px] lg:text-[10px] px-2 py-0.5 h-auto font-mono font-bold",
                 "bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-950/40 dark:to-amber-900/40",
                 "text-amber-600 dark:text-amber-300 hover:from-amber-100 hover:to-amber-200",
                 "dark:hover:from-amber-950/70 dark:hover:to-amber-900/70 border border-amber-200 dark:border-amber-800/30",
@@ -161,7 +161,7 @@ export function ModelCard({ model }: ModelCardProps) {
                 }}
               >
                 <span className="flex items-center justify-center">
-                  <OpenRouterIcon className="size-3.5 lg:size-3.5 xl:size-3 opacity-75 hover:opacity-100 transition-opacity" />
+                  <OpenRouterIcon className="size-3.5 lg:size-3.5 opacity-75 hover:opacity-100 transition-opacity" />
                 </span>
               </Button>
             )}
@@ -178,7 +178,7 @@ export function ModelCard({ model }: ModelCardProps) {
                 }}
               >
                 <span className="flex items-center justify-center">
-                  <HFIcon className="size-3.5 lg:size-3.5 xl:size-3 opacity-75 hover:opacity-100 transition-opacity" />
+                  <HFIcon className="size-3.5 lg:size-3.5 opacity-75 hover:opacity-100 transition-opacity" />
                 </span>
               </Button>
             )}

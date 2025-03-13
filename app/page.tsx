@@ -14,16 +14,15 @@ export default async function Home() {
   return (
     <div className="bg-background text-foreground">
       <main className="container mx-auto py-8 px-4 sm:px-6">
-        <h1 className="text-2xl tracking-tight font-bold mb-3 sm:mb-4 text-center">
-          Inference Directory
+        <h1 className="text-2xl font-mono tracking-tighter font-bold mb-4 text-center text-slate-800 dark:text-slate-100">
+          inference.directory
         </h1>
-        <div className="lg:max-w-xl max-w-xs mx-auto text-center text-muted-foreground text-sm">
-          <div className="mb-6 sm:mb-8">
-            Search for your favorite models and get the latest pricing
-            information. <br></br> Find{" "}
+        <div className="max-w-lg mx-auto text-center text-muted-foreground mb-8">
+          <div className="flex items-center justify-center flex-wrap gap-1.5">
+            Find the{" "}
             <Badge 
               className={cn(
-                "ml-1 font-mono",
+                "font-mono",
                 "bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950/40 dark:to-purple-900/40",
                 "text-purple-600 dark:text-purple-300 hover:bg-purple-100 dark:hover:from-purple-950/70 dark:hover:to-purple-900/70",
                 "border border-purple-200 dark:border-purple-800/30",
@@ -32,7 +31,8 @@ export default async function Home() {
             >
               <Rabbit className="size-3 mr-0.5" />
               throughput
-            </Badge>{" "}
+            </Badge>
+            {" "}
             and{" "}
             <Badge 
               className={cn(

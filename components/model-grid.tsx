@@ -8,16 +8,14 @@ import { cn } from "@/lib/utils";
 
 interface ModelGridProps {
   models: ModelRow[];
-  title?: string;
+  title?: React.ReactNode;
 }
 
 export function ModelGrid({ models, title }: ModelGridProps) {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
 
-  // Track scroll position to show/hide scroll-to-top button
   useEffect(() => {
     const handleScroll = () => {
-      // Show button when scrolled down 300px or more
       setShowScrollToTop(window.scrollY > 300);
     };
 
