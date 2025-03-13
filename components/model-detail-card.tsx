@@ -138,7 +138,7 @@ export function ModelDetailCard({ model }: ModelDetailCardProps) {
 
       <Card className="overflow-hidden">
         <CardHeader className="border-b border-border/40 pb-4">
-          <CardTitle className="flex justify-between items-center">
+          <CardTitle className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
             <div className="flex items-center gap-2">
               {authorData && (
                 <span className="inline-flex items-center justify-center rounded-md border border-border bg-background/80 w-8 h-8 relative overflow-hidden shadow-[0_2px_4px_rgba(0,0,0,0.02),inset_0_1px_1px_rgba(255,255,255,0.4)] dark:shadow-[0_2px_4px_rgba(0,0,0,0.1),inset_0_1px_1px_rgba(255,255,255,0.05)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.04),inset_0_1px_1px_rgba(255,255,255,0.4)] dark:hover:shadow-[0_4px_8px_rgba(0,0,0,0.15),inset_0_1px_1px_rgba(255,255,255,0.05)] transition-shadow group/icon">
@@ -150,7 +150,7 @@ export function ModelDetailCard({ model }: ModelDetailCardProps) {
               )}
               <span className="text-xl font-semibold">{model.name}</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
               {model.open_router_id && (
                 <Button
                   variant="outline"
@@ -260,8 +260,8 @@ export function ModelDetailCard({ model }: ModelDetailCardProps) {
               )}
             </div>
             {model.providers && model.providers.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div className="overflow-x-auto -mx-6 px-6">
+                <table className="w-full text-sm min-w-[640px]">
                   <thead>
                     <tr className="border-b border-border/50">
                       <th 
