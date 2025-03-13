@@ -15,9 +15,27 @@ import { TailwindIndicator } from "@/components/tailwind-indicator";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "inference.directory",
+  title: "Inference Directory | Throughput & Pricing for AI Models",
   description:
-    "The fastest way to find the best AI inference models and pricing.",
+    "The fastest way to find the best throughput and pricing for AI models.",
+  openGraph: {
+    title: "inference.directory",
+    description: "The fastest way to find the best throughput and pricing for AI models.",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "inference.directory - Find AI model pricing and throughput"
+      }
+    ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "inference.directory",
+    description: "The fastest way to find the best throughput and pricing for AI models.",
+    images: ["/og.png"]
+  }
 };
 
 export default function RootLayout({
@@ -49,7 +67,7 @@ export default function RootLayout({
             <footer className="container mx-auto py-6 px-4 sm:px-6 border-t border-border mt-8">
               <div className="text-center text-sm text-muted-foreground">
                 <p className="mb-4">
-                  Made by <a href="https://x.com/calebfahlgren" target="_blank" rel="noopener noreferrer" className="text-black dark:text-white hover:underline">calebfahlgren</a> using data from{" "}
+                  Data from{" "}
                   <a
                     href="https://huggingface.co"
                     target="_blank"

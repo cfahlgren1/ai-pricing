@@ -108,8 +108,19 @@ export default function SearchProviders({
     const query = inputValue?.trim();
     if (!query) return providers;
 
-    return providersFuse.search(query).map((result: FuseResult<Provider>) => result.item);
-  }, [providers, inputValue, providersFuse]);
+    const searchResults = providersFuse.search(query).map((result: FuseResult<Provider>) => result.item);
+    
+    if (localSelectedProviders && localSelectedProviders.length > 0) {
+      const selectedProviderSet = new Set(localSelectedProviders);
+      const missingSelectedProviders = providers.filter(
+        provider => selectedProviderSet.has(provider.id) && 
+        !searchResults.some(result => result.id === provider.id)
+      );
+      return [...searchResults, ...missingSelectedProviders];
+    }
+
+    return searchResults;
+  }, [providers, inputValue, providersFuse, localSelectedProviders]);
 
   const providerNameMap = useMemo(() => {
     const map = new Map<string, string>();

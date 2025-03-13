@@ -1,8 +1,9 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { HTMLAttributes, useMemo, useCallback } from "react";
+import { HTMLAttributes, useMemo, useCallback, useRef, useState, useEffect } from "react";
 import { useQueryState, parseAsString, parseAsArrayOf } from "nuqs";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export interface Provider {
   id: string;
@@ -23,6 +24,10 @@ export default function ProviderTabs({
   onSelectionChange,
   ...props
 }: ProviderTabsProps) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
   const [selectedProviders, setSelectedProviders] = useQueryState(
     "providers",
     parseAsArrayOf(parseAsString),
@@ -82,7 +87,7 @@ export default function ProviderTabs({
           )}
         >
           {provider.logo && (
-            <span className="flex items-center justify-center size-5 text-inherit">
+            <span className="flex items-center justify-center w-5 h-5 text-inherit shrink-0">
               {provider.logo}
             </span>
           )}
@@ -92,10 +97,44 @@ export default function ProviderTabs({
     });
   }, [providers, selectedProviderIds, handleProviderClick]);
 
+  const checkScroll = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = container;
+    setCanScrollLeft(scrollLeft > 0);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1); // -1 for potential rounding
+  }, []);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    checkScroll();
+    container.addEventListener('scroll', checkScroll);
+    window.addEventListener('resize', checkScroll);
+
+    return () => {
+      container.removeEventListener('scroll', checkScroll);
+      window.removeEventListener('resize', checkScroll);
+    };
+  }, [checkScroll]);
+
+  const scroll = useCallback((direction: 'left' | 'right') => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const scrollAmount = container.clientWidth * 0.8;
+    container.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth'
+    });
+  }, []);
+
   return (
-    <div className={cn("w-full", className)} {...props}>
+    <div className={cn("w-full relative", className)} {...props}>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 sm:mb-4 gap-2">
-        <h2 className="text-lg sm:text-xl font-medium">{title}</h2>
+        <h2 className="text-xl font-semibold">{title}</h2>
         {selectedProviderIds.length > 0 && (
           <button
             onClick={handleClearAll}
@@ -105,8 +144,37 @@ export default function ProviderTabs({
           </button>
         )}
       </div>
-      <div className="flex overflow-x-auto pb-2 -mb-2 snap-x no-scrollbar">
-        <div className="flex gap-2 sm:gap-3 py-2">{providerButtons}</div>
+      <div className="relative group">
+        {canScrollLeft && (
+          <>
+            <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-background to-transparent z-10" />
+            <button
+              onClick={() => scroll('left')}
+              className="absolute -left-4 sm:-left-6 top-1/2 -translate-y-1/2 z-20 bg-background/40 dark:bg-background/20 backdrop-blur-sm p-1.5 rounded-full shadow-sm border border-border/50 hover:bg-accent/60 dark:hover:bg-accent/20 transition-all duration-200 cursor-pointer hover:-translate-x-0.5"
+              aria-label="Scroll left"
+            >
+              <ChevronLeft className="h-3.5 w-3.5 text-foreground/70" />
+            </button>
+          </>
+        )}
+        {canScrollRight && (
+          <>
+            <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent z-10" />
+            <button
+              onClick={() => scroll('right')}
+              className="absolute -right-4 sm:-right-6 top-1/2 -translate-y-1/2 z-20 bg-background/40 dark:bg-background/20 backdrop-blur-sm p-1.5 rounded-full shadow-sm border border-border/50 hover:bg-accent/60 dark:hover:bg-accent/20 transition-all duration-200 cursor-pointer hover:translate-x-0.5"
+              aria-label="Scroll right"
+            >
+              <ChevronRight className="h-3.5 w-3.5 text-foreground/70" />
+            </button>
+          </>
+        )}
+        <div 
+          ref={scrollContainerRef}
+          className="flex overflow-x-auto snap-x no-scrollbar scroll-smooth relative"
+        >
+          <div className="flex gap-2 sm:gap-3 py-1 px-2">{providerButtons}</div>
+        </div>
       </div>
 
       <style jsx global>{`
