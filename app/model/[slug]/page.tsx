@@ -1,13 +1,51 @@
 import React from "react";
 import { fetchAllRows } from "@/lib/model-utils";
 import { notFound } from "next/navigation";
-import { ModelDetailCard } from "@/components/model-detail-card";
+import { ModelDetailCard } from "../../../components/model-detail-card";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
+import { Metadata } from "next";
 
 export const revalidate = 43200; // 12 hours
 
 export const dynamicParams = true;
+
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: Promise<{ slug: string }> 
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const decodedSlug = decodeURIComponent(slug);
+  
+  try {
+    const models = await fetchAllRows();
+    const model = models.find((m) => 
+      m.open_router_id === decodedSlug ||
+      (m.open_router_id === undefined && m.name === decodedSlug)
+    );
+    
+    if (!model) {
+      return {
+        title: `Model Not Found | Token Pricing`,
+        description: `The model ${decodedSlug} could not be found.`
+      };
+    }
+    
+    return {
+      title: `${model.name} - Pricing and Throughput`,
+      description: model.author 
+        ? `Token input/output pricing and throughput for ${model.name} by ${model.author}`
+        : `Token input/output pricing and throughput for ${model.name}`
+    };
+  } catch (error) {
+    console.error(`Error generating metadata for ${decodedSlug}:`, error);
+    return {
+      title: `Error | Token Pricing`,
+      description: `Error loading model data.`
+    };
+  }
+}
 
 export async function generateStaticParams() {
   try {
@@ -27,10 +65,9 @@ export async function generateStaticParams() {
 export default async function ModelDetailPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const resolvedParams = await Promise.resolve(params);
-  const { slug } = resolvedParams;
+  const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
   
   try {
