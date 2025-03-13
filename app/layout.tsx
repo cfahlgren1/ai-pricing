@@ -4,6 +4,8 @@ import { ThemeProvider } from "next-themes";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "sonner";
 import { Github } from "lucide-react";
+import OpenRouterIcon from "@/components/icons/OpenRouterIcon";
+import HFIcon from "@/components/icons/HFIcon";
 
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
@@ -46,10 +48,33 @@ export default function RootLayout({
             {children}
             <footer className="container mx-auto py-6 px-4 sm:px-6 border-t border-border mt-8">
               <div className="text-center text-sm text-muted-foreground">
-                <p>
-                  Made by <a href="https://x.com/calebfahlgren" target="_blank" rel="noopener noreferrer" className="text-black dark:text-white hover:underline">calebfahlgren</a> using data from <a href="https://huggingface.co" target="_blank" rel="noopener noreferrer" className="text-black dark:text-white hover:underline">Hugging Face</a> and <a href="https://openrouter.ai" target="_blank" rel="noopener noreferrer" className="text-black dark:text-white hover:underline">OpenRouter</a>.
+                <p className="mb-4">
+                  Made by <a href="https://x.com/calebfahlgren" target="_blank" rel="noopener noreferrer" className="text-black dark:text-white hover:underline">calebfahlgren</a> using data from{" "}
+                  <a
+                    href="https://huggingface.co"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-black dark:text-white hover:underline"
+                  >
+                    <span>Hugging Face</span>
+                    <span className="inline-flex items-center rounded border border-border bg-background px-1.5 py-0.5">
+                      <HFIcon className="h-3 w-3" />
+                    </span>
+                  </a>{" "}
+                  and{" "}
+                  <a
+                    href="https://openrouter.ai"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-black dark:text-white hover:underline"
+                  >
+                    <span>OpenRouter</span>
+                    <span className="inline-flex items-center rounded border border-border bg-background px-1.5 py-0.5">
+                      <OpenRouterIcon className="h-3 w-3" />
+                    </span>
+                  </a>.
                 </p>
-                <div className="mt-2 flex justify-center text-xs font-mono">
+                <div className="flex justify-center text-xs font-mono">
                   <a href="https://github.com/cfahlgren1/ai-pricing" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-black dark:text-white hover:underline" aria-label="GitHub repository">
                     <Github className="h-4 w-4 mr-1" />
                     <span className="font-bold">Contribute</span>
