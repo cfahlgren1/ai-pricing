@@ -1,4 +1,8 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# `inference.providers`
+
+The fastest way to get aggregated inference provider data from Hugging Face, Open Router and others.
+
+![](img.png)
 
 ## Getting Started
 
