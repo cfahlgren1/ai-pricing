@@ -22,13 +22,16 @@ import OpenRouterIcon from "./icons/OpenRouterIcon";
 import { Rabbit, Ruler } from "lucide-react";
 import { ProviderSheet } from "./provider-sheet";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface ModelCardProps {
   model: ModelRow;
 }
 
 export function ModelCard({ model }: ModelCardProps) {
+  const router = useRouter();
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [recentlyClosedSheet, setRecentlyClosedSheet] = useState(false);
 
   const medianThroughput = calculateMedianThroughput(model);
   const medianContextWindow = calculateMedianContextWindow(model);
@@ -48,13 +51,48 @@ export function ModelCard({ model }: ModelCardProps) {
     providersText = `${firstProvider}, ${secondProvider} and ${providerCount - 2} others`;
   }
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    if (
+      e.target instanceof HTMLElement && 
+      (e.target.closest('button') || e.target.closest('a') || e.target.closest('[role="button"]'))
+    ) {
+      return;
+    }
+    
+    if (recentlyClosedSheet) {
+      setRecentlyClosedSheet(false);
+      return;
+    }
+    
+    router.push(`/model/${encodeURIComponent(model.name)}`);
+  };
+
+  const handleSheetOpenChange = (open: boolean) => {
+    setSheetOpen(open);
+    
+    if (!open) {
+      setRecentlyClosedSheet(true);
+      setTimeout(() => {
+        setRecentlyClosedSheet(false);
+      }, 500);
+    }
+  };
+
+  const handleProviderSheetContainerClick = (e: React.MouseEvent) => {
+    if (sheetOpen || recentlyClosedSheet) {
+      e.stopPropagation();
+    }
+  };
+
   return (
     <Card 
       className={cn(
         "w-full transition-all flex flex-col h-80 xl:h-72",
         "hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700",
-        "group relative overflow-hidden"
+        "group relative overflow-hidden",
+        "cursor-pointer"
       )}
+      onClick={handleCardClick}
     >
       <div className="absolute inset-x-0 -bottom-1 h-[2px] bg-gradient-to-r from-transparent via-slate-300/40 dark:via-slate-600/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       
@@ -78,6 +116,7 @@ export function ModelCard({ model }: ModelCardProps) {
             )}
             size="sm"
             title="Tokens per second throughput"
+            onClick={(e) => e.stopPropagation()}
           >
             <Rabbit className="size-3 lg:size-3 xl:size-2.5" />
             {formatThroughput(medianThroughput)}
@@ -95,6 +134,7 @@ export function ModelCard({ model }: ModelCardProps) {
             )}
             size="sm"
             title="Context window size"
+            onClick={(e) => e.stopPropagation()}
           >
             <Ruler className="size-3 lg:size-3 xl:size-2.5" />
             {formatContextWindow(medianContextWindow)}
@@ -106,12 +146,14 @@ export function ModelCard({ model }: ModelCardProps) {
               className="text-xs md:text-[10px] p-1 rounded-full h-auto hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               size="sm"
               title="View on OpenRouter"
+              onClick={(e) => e.stopPropagation()}
             >
               <Link
                 href={`https://openrouter.ai/${model.open_router_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center"
+                onClick={(e) => e.stopPropagation()}
               >
                 <OpenRouterIcon className="size-3.5 lg:size-3.5 xl:size-3 opacity-75 hover:opacity-100 transition-opacity" />
               </Link>
@@ -123,12 +165,14 @@ export function ModelCard({ model }: ModelCardProps) {
               className="text-xs md:text-[10px] p-1 rounded-full h-auto hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               size="sm"
               title="View on Hugging Face"
+              onClick={(e) => e.stopPropagation()}
             >
               <Link
                 href={`https://huggingface.co/${model.hf_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center"
+                onClick={(e) => e.stopPropagation()}
               >
                 <HFIcon className="size-3.5 lg:size-3.5 xl:size-3 opacity-75 hover:opacity-100 transition-opacity" />
               </Link>
@@ -188,7 +232,7 @@ export function ModelCard({ model }: ModelCardProps) {
         </div>
       </CardContent>
 
-      <CardFooter className="p-2 pt-0 mt-auto w-full">
+      <CardFooter className="py-2 pt-0 mt-auto w-full">
         <div className="flex flex-col items-center w-full">
           {providerCount === 0 ? (
             <div className="text-xs text-muted-foreground w-full text-center">
@@ -199,13 +243,15 @@ export function ModelCard({ model }: ModelCardProps) {
               {firstProvider}
             </div>
           ) : (
-            <ProviderSheet 
-              open={sheetOpen}
-              onOpenChange={setSheetOpen}
-              model={model}
-              providersText={providersText}
-              sheetOpen={sheetOpen}
-            />
+            <div onClick={handleProviderSheetContainerClick}>
+              <ProviderSheet 
+                open={sheetOpen}
+                onOpenChange={handleSheetOpenChange}
+                model={model}
+                providersText={providersText}
+                sheetOpen={sheetOpen}
+              />
+            </div>
           )}
         </div>
       </CardFooter>

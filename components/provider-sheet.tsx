@@ -117,9 +117,29 @@ export function ProviderSheet({ model, open, onOpenChange, providersText, sheetO
     return `Sorted by ${fieldDisplayNames[sortField]} (${directionText})`;
   };
 
+  const handleSheetTriggerClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
+  const handleSheetContentClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
+  const handleSheetClose = (newOpen: boolean) => {
+    // If sheet is closing, make sure to stop propagation
+    if (!newOpen) {
+      // Use setTimeout to ensure this runs after the click event has been processed
+      setTimeout(() => {
+        onOpenChange(false);
+      }, 0);
+      return;
+    }
+    onOpenChange(newOpen);
+  };
+
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetTrigger asChild className="w-full">
+    <Sheet open={open} onOpenChange={handleSheetClose}>
+      <SheetTrigger asChild className="w-full" onClick={handleSheetTriggerClick}>
         <Button
           variant="ghost"
           size="sm"
@@ -134,6 +154,7 @@ export function ProviderSheet({ model, open, onOpenChange, providersText, sheetO
       <SheetContent
         side="bottom"
         className="px-0 h-[85vh] overflow-y-auto custom-scrollbar border-t border-border/40 shadow-lg"
+        onClick={handleSheetContentClick}
       >
         <SheetTitle className="sr-only">Model Providers</SheetTitle>
         <div className="max-w-2xl w-full mx-auto pt-10">
@@ -147,7 +168,7 @@ export function ProviderSheet({ model, open, onOpenChange, providersText, sheetO
                   
                   <div
                     className="col-span-2 group flex flex-col items-center justify-center cursor-pointer relative"
-                    onClick={() => handleSort("input")}
+                    onClick={(e) => { e.stopPropagation(); handleSort("input"); }}
                   >
                     <div className="flex items-center justify-center w-full">
                       <span className="font-semibold tracking-wide text-foreground/90 group-hover:text-foreground transition-all duration-200">
@@ -165,7 +186,7 @@ export function ProviderSheet({ model, open, onOpenChange, providersText, sheetO
                   {/* Output column header */}
                   <div
                     className="col-span-2 group flex flex-col items-center justify-center cursor-pointer relative"
-                    onClick={() => handleSort("output")}
+                    onClick={(e) => { e.stopPropagation(); handleSort("output"); }}
                   >
                     <div className="flex items-center justify-center w-full">
                       <span className="font-semibold tracking-wide text-foreground/90 group-hover:text-foreground transition-all duration-200">
@@ -183,7 +204,7 @@ export function ProviderSheet({ model, open, onOpenChange, providersText, sheetO
                   {/* Context column header */}
                   <div
                     className="col-span-2 group flex flex-col items-center justify-center cursor-pointer relative"
-                    onClick={() => handleSort("context")}
+                    onClick={(e) => { e.stopPropagation(); handleSort("context"); }}
                   >
                     <div className="flex items-center justify-center w-full">
                       <span className="font-semibold tracking-wide text-foreground/90 group-hover:text-foreground transition-all duration-200">
@@ -201,7 +222,7 @@ export function ProviderSheet({ model, open, onOpenChange, providersText, sheetO
                   {/* Throughput column header */}
                   <div
                     className="col-span-2 group flex flex-col items-center justify-center cursor-pointer relative whitespace-nowrap"
-                    onClick={() => handleSort("throughput")}
+                    onClick={(e) => { e.stopPropagation(); handleSort("throughput"); }}
                   >
                     <div className="flex items-center justify-center w-full">
                       <span className="font-semibold tracking-wide text-foreground/90 group-hover:text-foreground transition-all duration-200">
@@ -327,7 +348,13 @@ export function ProviderSheet({ model, open, onOpenChange, providersText, sheetO
               <Link 
                 href={`https://openrouter.ai/models/${model.open_router_id}`}
                 target="_blank" 
+                rel="noopener noreferrer"
                 className="text-blue-500 dark:text-blue-400 hover:underline"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  window.open(`https://openrouter.ai/models/${model.open_router_id}`, '_blank');
+                }}
               >
                 OpenRouter
               </Link>
