@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ModelRow } from "@/types/huggingface";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import HFIcon from "@/components/icons/HFIcon";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   formatPrice,
   calculateMedianThroughput,
@@ -36,6 +37,21 @@ export function ModelDetailCard({ model }: ModelDetailCardProps) {
   const medianContextWindow = calculateMedianContextWindow(model);
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        router.push("/");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [router]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -108,6 +124,9 @@ export function ModelDetailCard({ model }: ModelDetailCardProps) {
           <Link href="/">
             <ArrowLeft className="h-4 w-4" />
             <span>Back</span>
+            <span className="text-[11px] ml-1.5 bg-blue-100 dark:bg-blue-900/70 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-700 px-1.5 rounded font-mono leading-none py-0.5 font-medium">
+              ESC
+            </span>
           </Link>
         </Button>
       </div>
