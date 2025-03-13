@@ -8,6 +8,7 @@ import CohereIcon from "@/components/icons/CohereIcon";
 import GoogleAIIcon from "@/components/icons/GoogleAIIcon";
 import MetaIcon from "@/components/icons/MetaIcon";
 import PerplexityIcon from "@/components/icons/PerplexityIcon";
+import MicrosoftIcon from "@/components/icons/MicrosoftIcon";
 
 export type Author = {
   id: string;
@@ -50,5 +51,9 @@ export const authors: Author[] = [
   {
     id: "perplexity-ai",
     logo: <PerplexityIcon />,
+  },
+  {
+    id: "microsoft",
+    logo: <MicrosoftIcon />,
   },
 ]; 

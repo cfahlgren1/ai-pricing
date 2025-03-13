@@ -141,8 +141,9 @@ export function ModelDetailCard({ model }: ModelDetailCardProps) {
           <CardTitle className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               {authorData && (
-                <span className="inline-flex items-center justify-center rounded-full border border-border bg-background w-8 h-8">
-                  <div className="h-5 w-5 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full">
+                <span className="inline-flex items-center justify-center rounded-md border border-border bg-background/80 w-8 h-8 relative overflow-hidden shadow-[0_2px_4px_rgba(0,0,0,0.02),inset_0_1px_1px_rgba(255,255,255,0.4)] dark:shadow-[0_2px_4px_rgba(0,0,0,0.1),inset_0_1px_1px_rgba(255,255,255,0.05)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.04),inset_0_1px_1px_rgba(255,255,255,0.4)] dark:hover:shadow-[0_4px_8px_rgba(0,0,0,0.15),inset_0_1px_1px_rgba(255,255,255,0.05)] transition-shadow group/icon">
+                  <div className="absolute inset-0 bg-[radial-gradient(#00000005_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff08_1px,transparent_1px)] [background-size:3px_3px] opacity-40"></div>
+                  <div className="h-5 w-5 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full relative opacity-90 group-hover/icon:opacity-100 transition-opacity">
                     {authorData.logo}
                   </div>
                 </span>
